@@ -1,4 +1,8 @@
 #!/bin/bash
+# Copyright (c) 2026 Forke Inc. (https://www.forke.space/)
+# Source-Available License (Non-Commercial / Fair Source).
+# Open for inspection, learning, and non-commercial development.
+# Commercial use, hosting, or resale without authorization is strictly prohibited.
 # Writes Formula/forke-mail.rb for the latest forke-mail CLI release.
 # Usage: scripts/update-formula.sh [tag]   (defaults to the latest release)
 set -euo pipefail
@@ -47,6 +51,11 @@ do
 done
 
 cat >Formula/forke-mail.rb <<RUBY
+# Copyright (c) 2026 Forke Inc. (https://www.forke.space/)
+# Source-Available License (Non-Commercial / Fair Source).
+# Open for inspection, learning, and non-commercial development.
+# Commercial use, hosting, or resale without authorization is strictly prohibited.
+
 class ForkeMail < Formula
   desc "Send email, manage Forke Mail and connect AI agents from your terminal"
   homepage "https://www.forke.space/docs/forke-mail"
