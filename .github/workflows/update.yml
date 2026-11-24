@@ -1,0 +1,39 @@
+name: Update formula
+
+on:
+  schedule:
+    - cron: '17 * * * *'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag (empty for the latest)
+        required: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-formula
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Write the formula for the latest forke-mail release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash scripts/update-formula.sh "${{ github.event.inputs.tag }}"
+      - name: Commit when it changed
+        run: |
+          git diff --quiet && { echo "Formula already up to date"; exit 0; }
+          git config user.name "forke-mail-release"
+          git config user.email "support@forke.space"
+          git commit -qam "forke-mail $(sed -n 's#.*/releases/download/v\([^/]*\)/.*#\1#p' Formula/forke-mail.rb | head -1)"
+          for wait in 5 10 0; do
+            git push -q && exit 0
+            [ "$wait" -gt 0 ] && { git pull -q --rebase; sleep "$wait"; }
+          done
+          exit 1
